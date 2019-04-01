@@ -1,0 +1,70 @@
+# This is default sample specification
+# Feel free to change it
+pluginName: EC-Glassfish
+description: Sample plugin to connect to Glassfish
+version: 1.0.0
+author: Polina
+supportUrl: No support URL
+category: Application Servers
+
+# This is a declaration for the plugin configuration
+configuration:
+  # Shell to be used for checking connection
+  shell: ec-perl
+  parameters:
+   - name: config
+     type: entry
+     label: Configuration Name
+     required: true
+     documentation: The name for the created configuration
+   - name: cliPath
+     label: CLI path
+     type: entry
+     required: true
+     documentation: Path to asadmin cli, e.g. /home/glassfish/bin/asadmin
+     value: asadmin
+   - name: credential
+     type: credential
+     label: Credential
+     userNameLabel: Username
+     required: true
+     passwordLabel: Password
+   - name: debugLevel
+     label: Debug Level
+     type: select
+     required: 0
+     value: 0
+     options:
+       - name: Info
+         value: 0
+       - name: Debug
+         value: 1
+       - name: Trace
+         value: 2
+
+procedures:
+- name: Deploy
+  description: Deploys an application to Glassfish
+  hasConfig: true # configuration field will be generated automatically
+  parameters:
+  - name: applicationPath
+    documentation: Path to the application .war file, e.g. /tmp/hello-world.war
+    type: entry
+    required: true
+    label: Application Path
+    myparam: 2
+  outputParameters:
+    deployed: JSON representation of the deployed application
+  # Steps are not defined so we assume that this is one-step procedure with a single step named Deploy
+  shell: ec-perl
+- name: Undeploy
+  description: Undeploys an application from Glassfish
+  hasConfig: true # configuration field will be generated automatically
+  parameters:
+  - name: applicationName
+    documentation: Application name, e.g. hello-world
+    type: entry
+    required: true
+    label: Application Name
+  # Steps are not defined so we assume that this is one-step procedure with a single step named Deploy
+  shell: ec-perl
