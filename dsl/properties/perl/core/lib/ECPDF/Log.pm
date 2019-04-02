@@ -1,3 +1,104 @@
+=head1 NAME
+
+ECPDF::Log
+
+=head1 DESCRIPTION
+
+This class provides logging functionality for ECPDF.
+
+=head1 CAVEATS
+
+This package is being loaded at the beginning of ECPDF execution behind the scene.
+
+It is required to set up logging before other components are initialized.
+
+Logger is retrieving through run context current debug level from configuration.
+
+To enable this mechanics you need to add B<debugLevel> property to your configuration.
+
+It will be automatically read and logger would already have this debug level.
+
+Supported debug levels:
+
+=over 4
+
+=item B<INFO>
+
+Provides standard output. This is default level.
+
+debugLevel property should be set to 0.
+
+=item B<DEBUG>
+
+Provides the same output from INFO level + debug output.
+
+debugLevel property should be set to 1.
+
+=item B<TRACE>
+
+Provides the same output from DEBUG level + TRACE output.
+
+debugLevel property should be set to 2.
+
+=back
+
+=head1 SYNOPSIS
+
+To import ECPDF::Log:
+
+%%%LANG=perl%%%
+    use ECPDF::Log
+%%%LANG%%%
+
+This package imports following functions on load into current scope:
+
+=over 4
+
+=item B<logInfo>
+
+Logs an info message. Output is the same as from print function.
+
+%%%LANG=perl%%%
+    logInfo("This is an info message");
+%%%LANG%%%
+
+=item B<logDebug>
+
+Logs a debug message:
+
+%%%LANG=perl%%%
+    # this will print [DEBUG] This is a debug message.
+    # but only if debug level is enough (DEBUG or more).
+    logDebug("This is a debug message");
+%%%LANG%%%
+
+=item B<logTrace>
+
+%%%LANG=perl%%%
+    # this will print [TRACE] This is a trace message.
+    # but only if debug level is enough (TRACE or more).
+    logTrace("This is a debug message");
+%%%LANG%%%
+
+=item B<logWarning>
+
+%%%LANG=perl%%%
+    # this will print [WARNING] This is a warning message for any debug level:
+    logWarning("This is a warning message");
+%%%LANG%%%
+
+=item B<logError>
+
+%%%LANG=perl%%%
+    # this will print [ERROR] This is an error message for any debug level:
+    logWarning("This is an error message");
+%%%LANG%%%
+
+=back
+
+
+=cut
+
 package ECPDF::Log;
 use base qw/Exporter/;
 

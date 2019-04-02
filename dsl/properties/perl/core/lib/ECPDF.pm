@@ -43,6 +43,7 @@ An array reference with locations of plugin configurations. In all new plugins i
 
 Example of a plugin main class:
 
+%%%LANG=perl%%%
     package EC::Plugin::NewRest;
     use strict;
     use warnings;
@@ -81,6 +82,7 @@ Example of a plugin main class:
         # abd, finally, apply all scheduled settings.
         $stepResult->apply();
     }
+%%%LANG%%%
 
 =head1 ECPDF Crash Course
 
@@ -109,17 +111,21 @@ This file will be at dsl/properties/perl/lib/EC/Plugin/__YOURCLASS__.pm.
 For each procedure of your plugin, function in this file will be created during generation.
 To see, which function is for which procedure, visit dsl/procedures/__YOUR_PROCEDURE__/steps/__YOUR_PROCEDURE__.pl you will see something like:
 
+%%%LANG=perl%%%
     $[/myProject/perl/core/scripts/preamble.pl]
     use EC::Plugin::NewRest;
     # Auto generated code of plugin step
     EC::Plugin::YOURCLASS->runStep('YOURPROCEDURE', 'YOURPROCEDURESTEP', 'functionName');
+%%%LANG%%%
 
 In your main plugin class is function called functionName is already defined. It will be:
 
+%%%LANG=perl%%%
     sub functionName {
         my ($pluginObject) = @_;
         ...;
     }
+%%%LANG%%%
 
 That's it. Now, using this plugin object you can write your own logic.
 
@@ -136,13 +142,17 @@ Context is being created from plugin object using newContext() method. This cont
 
 Like that:
 
+%%%LANG=perl%%%
     my $context = $pluginObject->newContext();
+%%%LANG%%%
 
 =item B<Retrieving Step Parameters for the current run>
 
 After we have a context object, we can retrieve a step parameters using getStepParameters function.
 
+%%%LANG=perl%%%
     my $parameters = $context->getStepParameters();
+%%%LANG%%%
 
 Now, parameters are L<ECPDF::StepParameters> object.
 
@@ -150,6 +160,7 @@ Let's say, that we have a credential parameter called credential, that we need f
 Also, let's say that we have an 'url' parameter, that is mandatoty, and 'method' parameter, that is optional.
 Now, to get them we may want to write a piece of code that like that:
 
+%%%LANG=perl%%%
     my $cred = $parameters->getParameter('credential');
     my $url = $parameters->getParameter('url')->getValue();
     my $method = undef;
@@ -161,6 +172,7 @@ Now, to get them we may want to write a piece of code that like that:
         $username = $cred->getUserName();
         $password = $cred->getSecretValue();
     }
+%%%LANG%%%
 
 Also, you need to know that credential parameter is slightly different from parameter.
 When we retrieving parameter, that is parameter, we have a L<ECPDF::Parameter> as a result.
@@ -195,6 +207,7 @@ Let's take a closer look at your main class.
 
 On the top of it you can see something like:
 
+%%%LANG=perl%%%
     sub pluginInfo {
         return {
             pluginName    => '@PLUGIN_KEY@',
@@ -203,6 +216,7 @@ On the top of it you can see something like:
             configLocations => ['ec_plugin_cfgs'],
         }
     }
+%%%LANG%%%
 
 That's it. You can see that plugin definition has configFields and configLocations properties.
 
@@ -238,6 +252,7 @@ Typical workflow for L<ECPDF::StepResult> is:
 
 So, let's take an example:
 
+%%%LANG=perl%%%
     # Step 1. Creating an object.
     my $stepResult = $context->newStepResult();
     # Step 2. Adding action items.
@@ -245,6 +260,7 @@ So, let's take an example:
     $stepResult->setJobStepSummary('Done with success');
     # Step 3. Applying changes.
     $stepResult->apply();
+%%%LANG%%%
 
 For more details about available function, please, visit L<ECPDF::StepResult>
 
@@ -254,6 +270,7 @@ To perform rest request one need to get a L<ECPDF::Client::REST> object.
 
 As usual, this object is being created through context object. Like that:
 
+%%%LANG=perl%%%
     # retrieving new rest client object.
     my $restClient = $context->newRESTClient();
     # creating HTTP::Request object using our wrappers
@@ -262,6 +279,7 @@ As usual, this object is being created through context object. Like that:
     my $response = $restClient->doRequest($req);
     # printing response content:
     print $response->decoded_content();
+%%%LANG%%%
 
 =item B<CLI execution>
 
@@ -278,6 +296,7 @@ To do that, following steps have to be performed.
 
 Following example illustrates it:
 
+%%%LANG=perl%%%
     # Step 1 and 2. Loading component and creating CLI executor with working directory of current workspace.
     my $cli = ECPDF::ComponentManager->loadComponent('ECPDF::Component::CLI', {
         workingDirectory => $ENV{COMMANDER_WORKSPACE}
@@ -291,6 +310,7 @@ Following example illustrates it:
     my $res = $cli->runCommand($command);
     # Step 5. Processing a response.
     print "STDOUT: " . $res->getStdout();
+%%%LANG%%%
 
 =back
 
@@ -310,7 +330,7 @@ use ECPDF::ContextFactory;
 use ECPDF::ComponentManager;
 
 
-our $VERSION = '0.0.1';
+our $VERSION = '1.0.4';
 
 sub classDefinition {
     return {
@@ -329,7 +349,9 @@ sub classDefinition {
 
 Creates L<ECPDF::Context> object. Does not require any additional parameters.
 
+%%%LANG=perl%%%
     my $context = $pluginObject->newContext();
+%%%LANG%%%
 
 =back
 

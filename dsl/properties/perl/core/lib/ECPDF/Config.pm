@@ -1,3 +1,15 @@
+=head1 NAME
+
+ECPDF::Config
+
+=head1 DESCRIPTION
+
+This class has the same API as L<ECPDF::StepParameters>.
+
+See L<ECPDF::StepParameters> for details.
+
+=cut
+
 package ECPDF::Config;
 use ElectricCommander;
 

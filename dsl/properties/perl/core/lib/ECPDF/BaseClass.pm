@@ -1,7 +1,56 @@
-# this class is designed to be a base class for different classes.
-# to reduce amount of code, this class should be used as parent class.
-# child class should define a classDefinition method,
-# which should return hashref with parameters and their values type.
+=head1 NAME
+
+ECPDF::BaseClass
+
+=head1 DESCRIPTION
+
+ECPDF is a base class for classes are being used in ECPDF.
+
+This class creates in runtime accessors for class properties and creates a new() method as constructor.
+
+=head1 USAGE
+
+To use base class one need to:
+
+=over 4
+
+=item Create a class
+
+=item Make this class as base using use base
+
+=item Create classDefinition() method which returns a hashref with class definition.
+
+=back
+
+=head1 USAGE
+
+%%%LANG=perl%%%
+    package MyClass;
+    use base qw/ECPDF::BaseClass/;
+    use strict;
+    sub classDefinition {
+        return {
+            name => 'str',
+            value => 'str'
+        };
+    }
+
+    1;
+%%%LANG%%%
+
+After this class has been created, you can use it and have an accessors/constructors.
+
+%%%LANG=perl%%%
+    use MyClass;
+    my $object = MyClass->new({name => 'one', value => 'two'});
+    # name = one
+    my $name = $object->getName();
+    # value = two
+    my $value = $object->getValue();
+%%%LANG%%%
+
+=cut
+
 package ECPDF::BaseClass;
 
 use strict;

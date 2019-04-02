@@ -15,80 +15,87 @@ sub pluginInfo {
     };
 }
 
-sub deploy {
-    my ($pluginObject) = @_;
 
-    my $context = $pluginObject->newContext();
-    my $params = $context->getStepParameters();
+sub authCommand {
+    my ($self) = @_;
 
+    my $context = $self->newContext();
     my $configValues = $context->getConfigValues();
-
-    my $cred = $configValues->getParameter('credential');
-
-    my $cliPath = $configValues->{cliPath};
-    my $appPath = $params->getParameter('applicationPath');
     # Step 1 and 2. Loading component and creating CLI executor with working directory of current workspace.
     my $cli = ECPDF::ComponentManager->loadComponent('ECPDF::Component::CLI', {
       workingDirectory => $ENV{COMMANDER_WORKSPACE}
     });
+    my $cliPath = $configValues->getParameter('cliPath');
+    my $command = $cli->newCommand($cliPath);
+    my $cred = $configValues->getParameter('credential');
     if ($cred) {
         my $username = $cred->getUserName();
         my $password = $cred->getSecretValue();
         my ($fh, $filename) = tempfile();
         print $fh "AS_ADMIN_PASSWORD=$password";
         close $fh;
-        $cli->addArguments('--user');
-        $cli->addArguments($username);
-        $cli->addArguments('--passwordfile');
-        $cli->addArguments($filename);
+        $command->addArguments('--user');
+        $command->addArguments($username);
+        $command->addArguments('--passwordfile');
+        $command->addArguments($filename);
     }
-    $cli->addArguments($appPath);
-    print "Command to run: ". $cli->renderCommand() . "\n";
 
-    # bin/asadmin --user admin --passwordfile password undeploy hello-world
+    return ($cli, $command);
+}
+
+sub deploy {
+    my ($self) = @_;
+
+    my $context = $self->newContext();
+    my $params = $context->getStepParameters();
+    my $configValues = $context->getConfigValues();
 
 
-    # Step 3. Creating new command with ls as shell and -la as parameter.
-    my $command = $cli->newCommand($cliPath, [$appPath]);
+    my $appPath = $params->getParameter('applicationPath');
+    my ($cli, $command) = $self->authCommand();
+    $command->addArguments("deploy", $appPath);
+    print "Command to run: ". $command->renderCommand() . "\n";
+
     # Step 4. Executing a command
     my $res = $cli->runCommand($command);
-
-    # $command->addArguments('-lah');
-    # Step 5. Processing a response.
-    print "STDOUT: " . $res->getStdout();
-
-
-    my $stepResult = $context->newStepResult();
-    print "Created stepresult\n";
-    $stepResult->setJobStepOutcome('warning');
-    print "Set stepResult\n";
-
-    $stepResult->setJobSummary("See, this is a whole job summary");
-    $stepResult->setJobStepSummary('And this is a job step summary');
-
-    $stepResult->apply();
+    $self->processRes($res);
 }
+
+
+
 sub undeploy {
-    my ($pluginObject) = @_;
-    my $context = $pluginObject->newContext();
-    print "Current context is: ", $context->getRunContext(), "\n";
+    my ($self) = @_;
+    my $context = $self->newContext();
     my $params = $context->getStepParameters();
-    print Dumper $params;
-
     my $configValues = $context->getConfigValues();
-    print Dumper $configValues;
 
-    my $stepResult = $context->newStepResult();
-    print "Created stepresult\n";
-    $stepResult->setJobStepOutcome('warning');
-    print "Set stepResult\n";
+    my $appName = $params->getParameter('applicationName');
+    my ($cli, $command) = $self->authCommand();
+    $command->addArguments("undeploy", $appName);
+    print "Command to run: ". $command->renderCommand() . "\n";
 
-    $stepResult->setJobSummary("See, this is a whole job summary");
-    $stepResult->setJobStepSummary('And this is a job step summary');
-
-    $stepResult->apply();
+    # Step 4. Executing a command
+    my $res = $cli->runCommand($command);
+    $self->processRes($res);
 }
 ## === step ends ===
 
+
+sub processRes {
+    my ($self, $res) = @_;
+
+    print "STDOUT: " . $res->getStdout();
+    print "STDERR: " . $res->getStderr();
+    my $code = $res->getCode();
+    my $stepResult = $self->newContext()->newStepResult();
+    if ($code != 0) {
+        $stepResult->setJobStepOutcome('error');
+        $stepResult->setJobStepSummary($res->getStderr());
+    }
+    else {
+        $stepResult->setJobStepSummary($res->getStdout());
+    }
+    $stepResult->apply();
+}
 
 1;

@@ -1,3 +1,21 @@
+=head1 NAME
+
+ECPDF::StepParameters
+
+=head1 DESCRIPTION
+
+This class represents current step parameters, that are defined for current procedure step or current pipeline task.
+
+=head1 SYNOPSIS
+
+To get an ECPDF::StepParameters object you need to use newStepParameters() method from L<ECPDF::Context>.
+
+=head1 METHODS
+
+=over
+
+=cut
+
 package ECPDF::StepParameters;
 use base qw/ECPDF::BaseClass/;
 use strict;
@@ -12,10 +30,22 @@ sub classDefinition {
 
 # sub isParameterExists {};
 # sub getParameter {};
-sub setParameter {};
-sub setCredential {};
-sub getCredential {};
+# sub setParameter {};
+# sub setCredential {};
+# sub getCredential {};
 
+
+=item B<isParameterExists>
+
+Returns true if parameter exists in the current step.
+
+%%%LANG=perl%%%
+    if ($stepParameters->isParameterExists('query')) {
+        ...;
+    }
+%%%LANG%%%
+
+=cut
 
 sub isParameterExists {
     my ($self, $parameterName) = @_;
@@ -27,6 +57,32 @@ sub isParameterExists {
     return 0;
 }
 
+=item B<getParameter>
+
+Returns an L<ECPDF::Parameter> object or L<ECPDF::Credential> object.
+
+To get parameter object:
+
+%%%LANG=perl%%%
+    my $query = $stepParameters->getParameter('query');
+%%%LANG%%%
+
+If your parameter is an L<ECPDF::Parameter> object, you can get its value either by getValue() method, or using string context:
+
+%%%LANG=perl%%%
+    print "Query:", $query->getValue();
+%%%LANG%%%
+
+Or:
+
+%%%LANG=perl%%%
+    print "Query: $query"
+%%%LANG%%%
+
+If your parameter is L<ECPDF::Credential>, follow its own documentation.
+
+=cut
+
 sub getParameter {
     my ($self, $parameterName) = @_;
 
@@ -36,7 +92,9 @@ sub getParameter {
 
     return $self->getParameters()->{$parameterName};
 }
-# sub newStepParameters {
 
-# }
+=back
+
+=cut
+
 1;

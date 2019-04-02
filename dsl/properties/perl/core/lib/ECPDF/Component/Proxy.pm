@@ -26,9 +26,9 @@ code without changing the interface. It is mush simpler than fix it in each plug
 
 Dmitriy <dshamatr@electric-cloud.com> Shamatrin
 
-
 =head1 SYNOPSIS
 
+%%%LANG=perl%%%
     use EC::ProxyDriver;
 
     # create proxy dispatcher object
@@ -48,6 +48,7 @@ Dmitriy <dshamatr@electric-cloud.com> Shamatrin
 
     # detach proxy, if required.
     $proxy->detach();
+%%%LANG%%%
 
 =head1 METHODS
 
@@ -79,12 +80,14 @@ sub init {
 
 Constructor method, creates proxy dispatcher object.
 
+%%%LANG=perl%%%
     my $proxy = EC::ProxyDriver->new({
         url => 'http://docker:3128',
         username => 'user1',
         password => 'password1',
         debug => 0,
     });
+%%%LANG%%%
 
 =cut
 
@@ -110,7 +113,9 @@ sub new {
 Applies proxy changes to whole context in a right way. One should use that function
 and be sure that proxy is set.
 
+%%%LANG=perl%%%
     $proxy->apply();
+%%%LANG%%%
 
 =cut
 
@@ -153,7 +158,9 @@ sub set_env {
 
 Disables proxy for a whole context. It could be useful sometimes to revert all changes that was made by apply function.
 
+%%%LANG=perl%%%
     $proxy->detach();
+%%%LANG%%%
 
 =cut
 
@@ -188,7 +195,9 @@ sub getset {
 
 Returns a proxy url if set. Returns empty string if not.
 
+%%%LANG=perl%%%
     my $proxy_url = $proxy->url();
+%%%LANG%%%
 
 =cut
 
@@ -204,7 +213,9 @@ sub url {
 Returns a proxy auth method that is being used. Currently only basic is supported,
 which is set as default.
 
-my $auth_method = $proxy->auth_method();
+%%%LANG=perl%%%
+    my $auth_method = $proxy->auth_method();
+%%%LANG%%%
 
 =cut
 
@@ -219,7 +230,9 @@ sub auth_method {
 
 Returns a proxy auth username if set. Returns empty string if not.
 
+%%%LANG=perl%%%
     my $proxy_url = $proxy->username();
+%%%LANG%%%
 
 =cut
 
@@ -234,7 +247,9 @@ sub username {
 
 Returns a proxy auth password if set. Returns empty string if not.
 
+%%%LANG=perl%%%
     my $proxy_url = $proxy->password();
+%%%LANG%%%
 
 =cut
 
@@ -251,11 +266,15 @@ Enables and disables debug mode for module.
 
 To enable:
 
+%%%LANG=perl%%%
     $proxy->debug(1);
+%%%LANG%%%
 
 To disable
 
+%%%LANG=perl%%%
     $proxy->debug(0);
+%%%LANG%%%
 
 =cut
 
@@ -273,8 +292,10 @@ sub debug {
 
 Augments HTTP::Request object with proxy headers.
 
+%%%LANG=perl%%%
     my $req = HTTP::Request->new(...);
     $req = $proxy->augment_request($req);
+%%%LANG%%%
 
 =cut
 
@@ -300,7 +321,9 @@ sub augment_request {
 
 Detaches changes of request and removes added headers.
 
+%%%LANG=perl%%%
     $req = $proxy->detach_request($req);
+%%%LANG%%%
 
 =cut
 
@@ -315,8 +338,10 @@ sub detach_request {
 
 Augments LWP::UserAgent object with proxy information.
 
+%%%LANG=perl%%%
     my $ua = LWP::UserAgent->new(...);
     $ua = $proxy->augment_lwp($ua);
+%%%LANG%%%
 
 =cut
 
@@ -343,7 +368,9 @@ sub augment_lwp {
 
 Removes proxy setup from an LWP object.
 
+%%%LANG=perl%%%
     $ua = $proxy->detach_lwp($ua);
+%%%LANG%%%
 
 =cut
 

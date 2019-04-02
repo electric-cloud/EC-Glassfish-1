@@ -61,7 +61,9 @@ sub setCacheForAction {
 
 Schedules setting of a job step outcome. Could be warning, success or an error.
 
+%%%LANG=perl%%%
     $stepResult->setJobStepOutcome('warning');
+%%%LANG%%%
 
 =back
 
@@ -100,7 +102,13 @@ sub setJobStepOutcome {
 
 Sets the summary of the current pipeline task.
 
+Summaries of pipelien tasks are available on pipeline stage execution result under the "Summary" link.
+
+Following code will set pipeline summary with name 'Procedure Exectuion Result:' to 'All tests are ok'
+
+%%%LANG=perl%%%
     $stepResult->setPipelineSummary('Procedure Execution Result:', 'All tests are ok');
+%%%LANG%%%
 
 =back
 
@@ -131,7 +139,9 @@ sub setPipelineSummary {
 
 Sets the summary of the current B<job step>.
 
+%%%LANG=perl%%%
     $stepResult->setJobStepSummary('All tests are ok in this step.');
+%%%LANG%%%
 
 =back
 
@@ -162,7 +172,9 @@ sub setJobStepSummary {
 
 Sets the summary of the current B<job>.
 
+%%%LANG=perl%%%
     $stepResult->setJobSummary('All tests are ok');
+%%%LANG%%%
 
 =back
 
@@ -193,7 +205,9 @@ sub setJobSummary {
 
 Sets the outcome property.
 
+%%%LANG=perl%%%
     $stepResult->setOutcomeProperty('/myJob/buildNumber', '42');
+%%%LANG%%%
 
 =back
 
@@ -240,7 +254,9 @@ sub setOutputParameter {
 
 Applies scheduled changes without schedule cleanup in queue order: first scheduled, first executed.
 
+%%%LANG=perl%%%
     $stepResult->apply();
+%%%LANG%%%
 
 =back
 
@@ -294,7 +310,9 @@ sub apply {
 
 Flushes scheduled actions.
 
+%%%LANG=perl%%%
     $stepResult->flush();
+%%%LANG%%%
 
 =back
 
@@ -319,7 +337,9 @@ sub flush {
 
 Executes the schedule queue and flushed it then.
 
+%%%LANG=perl%%%
     $stepResult->applyAndFlush();
+%%%LANG%%%
 
 =back
 

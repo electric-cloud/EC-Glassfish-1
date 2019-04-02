@@ -72,12 +72,15 @@ sub new {
 Returns a L<ECPDF::StepParameters> object to be used as accessor for current step parameters.
 This method does not require parameters.
 
+%%%LANG=perl%%%
     my $params = $context->getStepParameters();
     # this method returns a L<ECPDF::Parameter> object, or undef, if no parameter with that name has been found.
     my $param = $params->getParameter('myStepParameter');
     if ($param) {
         print "Param value is:", $param->getValue(), "\n";
     }
+%%%LANG%%%
+
 
 =back
 
@@ -131,11 +134,13 @@ sub getStepParameters {
 
 This method returns a L<ECPDF::Config> object that represents plugin configuration. This method does not require parameters.
 
+%%%LANG=perl%%%
     my $configValues = $context->getConfigValues();
     my $cred = $configValues->getParameter('credential');
     if ($cred) {
         print "Secret value is: ", $cred->getSecretValue(), "\n";
     }
+%%%LANG%%%
 
 =back
 
@@ -280,9 +285,11 @@ sub retrieveConfigByNameAndLocation {
 
 This method returns an L<ECPDF::StepResult> object, which is being used to work with procedure output.
 
+%%%LANG=perl%%%
     my $stepResult = $context->newStepResult();
     ...;
     $stepResult->apply();
+%%%LANG%%%
 
 =back
 
