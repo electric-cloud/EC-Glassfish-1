@@ -16,6 +16,24 @@ sub pluginInfo {
 }
 
 
+sub processRes {
+    my ($self, $res) = @_;
+
+    print "STDOUT: " . $res->getStdout();
+    print "STDERR: " . $res->getStderr();
+    my $code = $res->getCode();
+    my $stepResult = $self->newContext()->newStepResult();
+    if ($code != 0) {
+        $stepResult->setJobStepOutcome('error');
+        $stepResult->setJobStepSummary($res->getStderr());
+    }
+    else {
+        $stepResult->setJobStepSummary($res->getStdout());
+    }
+    $stepResult->apply();
+}
+
+
 sub authCommand {
     my ($self) = @_;
 
@@ -80,22 +98,5 @@ sub undeploy {
 }
 ## === step ends ===
 
-
-sub processRes {
-    my ($self, $res) = @_;
-
-    print "STDOUT: " . $res->getStdout();
-    print "STDERR: " . $res->getStderr();
-    my $code = $res->getCode();
-    my $stepResult = $self->newContext()->newStepResult();
-    if ($code != 0) {
-        $stepResult->setJobStepOutcome('error');
-        $stepResult->setJobStepSummary($res->getStderr());
-    }
-    else {
-        $stepResult->setJobStepSummary($res->getStdout());
-    }
-    $stepResult->apply();
-}
 
 1;
